@@ -2,13 +2,16 @@ import SakuraEditorialPoster from "@/components/ui/sakura-editorial-poster";
 
 export default function DefaultDemo({
   onTabClick,
+  onLogin,
 }: {
   onTabClick?: (tabId: string) => void;
+  onLogin?: () => void;
 } = {}) {
   return (
     <SakuraEditorialPoster
       className="w-full"
       onTabClick={onTabClick}
+      onLogin={onLogin}
       sceneSrc={`${import.meta.env.BASE_URL}mine-background.jpg`}
       sceneAlt="Open-pit mining quarry aerial view"
       foregroundSrc={null}
