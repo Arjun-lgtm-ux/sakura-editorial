@@ -47,33 +47,35 @@ export default function App() {
         </main>
       )}
 
-      {/* ── Floating Sticky Chatbot Trigger (Bottom-Right on all pages) ── */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center">
-        {showChatbot ? (
-          <div className="mb-3 animate-in zoom-in-95 fade-in duration-200">
-            <MorphOrb onClose={() => setShowChatbot(false)} />
-          </div>
-        ) : null}
+      {/* ── Floating Sticky Chatbot Trigger (Only shown on Logged-in Dashboard) ── */}
+      {isLoggedIn && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center">
+          {showChatbot ? (
+            <div className="mb-3 animate-in zoom-in-95 fade-in duration-200">
+              <MorphOrb onClose={() => setShowChatbot(false)} />
+            </div>
+          ) : null}
 
-        <button
-          type="button"
-          onClick={() => setShowChatbot(!showChatbot)}
-          className="group flex flex-col items-center focus:outline-none"
-          aria-label="Open Ad Marsal Chatbot"
-        >
-          {/* Cute Smile Circle */}
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#cc5500] bg-[#4e342e] text-[#f8f4e7] shadow-[0_8px_25px_rgba(78,52,46,0.35)] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#cc5500] group-hover:border-[#4e342e] active:scale-95">
-            <span className="text-2xl select-none transition-transform duration-200 group-hover:rotate-12">
-              😊
+          <button
+            type="button"
+            onClick={() => setShowChatbot(!showChatbot)}
+            className="group flex flex-col items-center focus:outline-none"
+            aria-label="Open Ad Marsal Chatbot"
+          >
+            {/* Cute Smile Circle */}
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#cc5500] bg-[#4e342e] text-[#f8f4e7] shadow-[0_8px_25px_rgba(78,52,46,0.35)] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#cc5500] group-hover:border-[#4e342e] active:scale-95">
+              <span className="text-2xl select-none transition-transform duration-200 group-hover:rotate-12">
+                😊
+              </span>
+            </div>
+
+            {/* Label Below Circle */}
+            <span className="mt-1.5 rounded-full border border-[#4e342e]/15 bg-[#f8f4e7]/90 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#4e342e] shadow-sm backdrop-blur-md group-hover:bg-[#4e342e] group-hover:text-[#f8f4e7] transition-colors">
+              Your Chatbot
             </span>
-          </div>
-
-          {/* Label Below Circle */}
-          <span className="mt-1.5 rounded-full border border-[#4e342e]/15 bg-[#f8f4e7]/90 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-[#4e342e] shadow-sm backdrop-blur-md group-hover:bg-[#4e342e] group-hover:text-[#f8f4e7] transition-colors">
-            Your Chatbot
-          </span>
-        </button>
-      </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

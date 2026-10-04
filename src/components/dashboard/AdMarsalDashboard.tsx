@@ -22,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import ContributionSkyline from "@/components/ui/contribution-skyline";
+import Timeline from "@/components/ui/timeline";
 
 interface AdMarsalDashboardProps {
   userEmail: string;
@@ -311,7 +312,11 @@ export default function AdMarsalDashboard({
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => {
+                    setActiveTab(tab.id as any);
+                    const el = document.getElementById(tab.id);
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
                   className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${
                     isActive
                       ? "bg-[#4e342e] text-[#f8f4e7] shadow-md"
@@ -413,234 +418,254 @@ export default function AdMarsalDashboard({
         </div>
       </section>
 
-      {/* ── Main Tab Views ── */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8">
-        {/* TAB 1: TRAIN (AR MODULES) */}
-        {activeTab === "train" && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-[#4e342e]">Vocational Spatial AR Modules</h2>
-                <p className="text-xs text-[#8d6e63]">Select any interactive scenario to launch immersive camera test</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {trainingModules.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col justify-between rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/50 p-6 shadow-sm transition-all hover:border-[#cc5500] hover:shadow-md hover:-translate-y-0.5"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f8f4e7] border border-[#4e342e]/15 shadow-inner">
-                          {item.icon}
-                        </div>
-                        <div>
-                          <span className="inline-block rounded-md bg-[#4e342e]/10 px-2 py-0.5 text-[11px] font-bold text-[#4e342e]">
-                            {item.category}
-                          </span>
-                          <div className="text-xs text-[#8d6e63] mt-0.5 font-medium">
-                            {item.level} · {item.duration}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="rounded-full border border-[#cc5500]/40 bg-[#cc5500]/10 px-2.5 py-0.5 text-xs font-bold text-[#cc5500]">
-                        {item.accuracy} Target
-                      </span>
-                    </div>
-
-                    <h3 className="mt-4 text-lg font-bold text-[#4e342e]">{item.title}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#4e342e]/85">{item.desc}</p>
-
-                    <div className="mt-4 space-y-1.5 rounded-xl border border-[#4e342e]/15 bg-[#f8f4e7] p-3 text-xs text-[#4e342e]">
-                      {item.checklist.map((pt, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                          <CheckCircle className="h-3.5 w-3.5 text-[#cc5500] shrink-0" />
-                          <span className="font-medium">{pt}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-[#4e342e]/10 pt-4">
-                    <span className="text-xs font-semibold text-[#8d6e63]">DGMS Safety Compliant</span>
-                    <button
-                      onClick={() => {
-                        setSelectedModule({ id: item.id, title: item.title, category: item.category });
-                        setArStep(1); // Open step 1 of instructions
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-[#4e342e] px-4 py-2.5 text-xs font-bold text-[#f8f4e7] shadow transition hover:bg-[#cc5500] active:scale-95"
-                    >
-                      <Play className="h-3.5 w-3.5 fill-current" />
-                      <span>{langText.startModule}</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: CERTIFICATION */}
-        {activeTab === "certification" && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[#4e342e]/10 pb-4">
-              <div>
-                <h2 className="text-xl font-bold text-[#4e342e]">Earned Vocational Certifications</h2>
-                <p className="text-xs text-[#8d6e63]">Official Ad Marsal & Ministry verified AR training records</p>
-              </div>
-              <span className="rounded-full bg-[#cc5500] px-3 py-1 text-xs font-bold text-[#f8f4e7]">
-                {certificates.length} Verified Credentials
-              </span>
-            </div>
-
-            <div className="space-y-3">
-              {certificates.map((cert) => (
-                <div
-                  key={cert.id}
-                  onClick={() => setSelectedCert(cert)}
-                  className="group flex cursor-pointer items-center justify-between rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/50 p-4 px-5 transition-all hover:border-[#cc5500] hover:bg-[#efe6d5] hover:shadow-md"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#4e342e] text-[#f8f4e7] shadow-sm">
-                      <Award className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-[#4e342e] group-hover:text-[#cc5500] transition-colors">
-                        {cert.moduleName}
-                      </h4>
-                      <div className="mt-0.5 flex items-center gap-3 text-xs text-[#8d6e63]">
-                        <span>Issued: {cert.date}</span>
-                        <span>•</span>
-                        <span className="font-mono text-[11px] text-[#cc5500] font-semibold">{cert.certCode}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <span className="block text-base font-extrabold text-[#cc5500]">{cert.score}%</span>
-                      <span className="block text-[10px] uppercase font-bold text-[#4e342e]/60">Grade A</span>
-                    </div>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4e342e]/10 group-hover:bg-[#cc5500] group-hover:text-[#f8f4e7] transition">
-                      <ChevronRight className="h-4 w-4" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: GROWTH (CONTRIBUTION SKYLINE) */}
-        {activeTab === "growth" && (
-          <div className="space-y-6">
+      {/* ── Main Sequential Sections (Train, Certification, Growth, Help) ── */}
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8 space-y-20">
+        {/* SECTION 1: TRAIN (AR MODULES) */}
+        <section id="train" className="space-y-6 scroll-mt-24">
+          <div className="flex items-center justify-between border-b border-[#4e342e]/10 pb-4">
             <div>
-              <h2 className="text-xl font-bold text-[#4e342e]">Workforce Preparedness & Growth Tracking</h2>
-              <p className="text-xs text-[#8d6e63]">
-                Visualizing frontline worker AR drill participation, frequency, and streak metrics across the past year.
+              <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">PRACTICE & SIMULATE</span>
+              <h2 className="text-2xl font-extrabold text-[#4e342e]">Vocational Spatial AR Modules</h2>
+              <p className="text-xs text-[#8d6e63]">Select any interactive scenario to launch immersive camera test</p>
+            </div>
+            <span className="hidden sm:inline-block rounded-full border border-[#cc5500]/30 bg-[#cc5500]/10 px-3 py-1 text-xs font-bold text-[#cc5500]">
+              4 Spatial Scenarios Ready
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {trainingModules.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col justify-between rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/50 p-6 shadow-sm transition-all hover:border-[#cc5500] hover:shadow-md hover:-translate-y-0.5"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f8f4e7] border border-[#4e342e]/15 shadow-inner">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <span className="inline-block rounded-md bg-[#4e342e]/10 px-2 py-0.5 text-[11px] font-bold text-[#4e342e]">
+                          {item.category}
+                        </span>
+                        <div className="text-xs text-[#8d6e63] mt-0.5 font-medium">
+                          {item.level} · {item.duration}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="rounded-full border border-[#cc5500]/40 bg-[#cc5500]/10 px-2.5 py-0.5 text-xs font-bold text-[#cc5500]">
+                      {item.accuracy} Target
+                    </span>
+                  </div>
+
+                  <h3 className="mt-4 text-lg font-bold text-[#4e342e]">{item.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-[#4e342e]/85">{item.desc}</p>
+
+                  <div className="mt-4 space-y-1.5 rounded-xl border border-[#4e342e]/15 bg-[#f8f4e7] p-3 text-xs text-[#4e342e]">
+                    {item.checklist.map((pt, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <CheckCircle className="h-3.5 w-3.5 text-[#cc5500] shrink-0" />
+                        <span className="font-medium">{pt}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between border-t border-[#4e342e]/10 pt-4">
+                  <span className="text-xs font-semibold text-[#8d6e63]">DGMS Safety Compliant</span>
+                  <button
+                    onClick={() => {
+                      setSelectedModule({ id: item.id, title: item.title, category: item.category });
+                      setArStep(1);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#4e342e] px-4 py-2.5 text-xs font-bold text-[#f8f4e7] shadow transition hover:bg-[#cc5500] active:scale-95"
+                  >
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                    <span>{langText.startModule}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION 2: CERTIFICATION */}
+        <section id="certification" className="space-y-6 border-t border-[#4e342e]/15 pt-16 scroll-mt-24">
+          <div className="flex items-center justify-between border-b border-[#4e342e]/10 pb-4">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">ACCREDITED RECORDS</span>
+              <h2 className="text-2xl font-extrabold text-[#4e342e]">Earned Vocational Certifications</h2>
+              <p className="text-xs text-[#8d6e63]">Official Ad Marsal & Ministry verified AR training records</p>
+            </div>
+            <span className="rounded-full bg-[#cc5500] px-3.5 py-1.5 text-xs font-bold text-[#f8f4e7] shadow-sm">
+              {certificates.length} Verified Credentials
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {certificates.map((cert) => (
+              <div
+                key={cert.id}
+                onClick={() => setSelectedCert(cert)}
+                className="group flex cursor-pointer items-center justify-between rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/50 p-4 px-5 transition-all hover:border-[#cc5500] hover:bg-[#efe6d5] hover:shadow-md"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#4e342e] text-[#f8f4e7] shadow-sm">
+                    <Award className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-[#4e342e] group-hover:text-[#cc5500] transition-colors">
+                      {cert.moduleName}
+                    </h4>
+                    <div className="mt-0.5 flex items-center gap-3 text-xs text-[#8d6e63]">
+                      <span>Issued: {cert.date}</span>
+                      <span>•</span>
+                      <span className="font-mono text-[11px] text-[#cc5500] font-semibold">{cert.certCode}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <span className="block text-base font-extrabold text-[#cc5500]">{cert.score}%</span>
+                    <span className="block text-[10px] uppercase font-bold text-[#4e342e]/60">Grade A</span>
+                  </div>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4e342e]/10 group-hover:bg-[#cc5500] group-hover:text-[#f8f4e7] transition">
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION 3: GROWTH (CONTRIBUTION SKYLINE) */}
+        <section id="growth" className="space-y-6 border-t border-[#4e342e]/15 pt-16 scroll-mt-24">
+          <div className="border-b border-[#4e342e]/10 pb-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">ENGAGEMENT MATRIX</span>
+            <h2 className="text-2xl font-extrabold text-[#4e342e]">Workforce Preparedness & Growth Tracking</h2>
+            <p className="text-xs text-[#8d6e63]">
+              Visualizing frontline worker AR drill participation, frequency, and streak metrics across the past year.
+            </p>
+          </div>
+
+          {/* Contribution Skyline Component Integration */}
+          <div className="w-full">
+            <ContributionSkyline palette="chocolate" defaultView="3d" />
+          </div>
+
+          {/* Growth Analytics Summary Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#8d6e63]">Safety Incident Reduction</span>
+              <h3 className="mt-2 text-2xl font-extrabold text-[#4e342e]">-74.2%</h3>
+              <p className="mt-1 text-xs text-[#8d6e63]">Compared to traditional classroom mock drills</p>
+            </div>
+            <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">Reaction Speed Time</span>
+              <h3 className="mt-2 text-2xl font-extrabold text-[#cc5500]">3.2 Sec</h3>
+              <p className="mt-1 text-xs text-[#8d6e63]">From hazard cue to correct SCBA / evacuation decision</p>
+            </div>
+            <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#8d6e63]">Total Certified Workers</span>
+              <h3 className="mt-2 text-2xl font-extrabold text-[#4e342e]">1,420+</h3>
+              <p className="mt-1 text-xs text-[#8d6e63]">Active workers across opencast and underground pits</p>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 4: HELP & EVOLUTION TIMELINE */}
+        <section id="help" className="space-y-10 border-t border-[#4e342e]/15 pt-16 pb-12 scroll-mt-24">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">GUIDE & METHODOLOGY</span>
+            <h2 className="text-2xl font-extrabold text-[#4e342e]">How to Use Ad Marsal System</h2>
+            <p className="text-xs text-[#8d6e63]">Simple step-by-step guide for trainees and frontline supervisors</p>
+          </div>
+
+          {/* Numbered Steps */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { step: "01", title: "Select Scenario", text: "Choose your target scenario from Highwall, Haul Truck, Gas Drill, or PPE audit." },
+              { step: "02", title: "Camera Calibration", text: "Point your smartphone or AR visor camera toward your training floor or workbench." },
+              { step: "03", title: "Identify & React", text: "Detect simulated cracks, gas clouds, or vehicles and tap the correct safety procedure." },
+              { step: "04", title: "Claim Certificate", text: "Receive real-time grading, benchmark feedback, and instant printable safety certification." },
+            ].map((s) => (
+              <div key={s.step} className="rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/60 p-5 relative overflow-hidden">
+                <span className="text-3xl font-black text-[#4e342e]/15 absolute top-2 right-3 select-none">{s.step}</span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4e342e] text-[#f8f4e7] text-xs font-bold mb-3">
+                  {s.step}
+                </div>
+                <h4 className="text-sm font-bold text-[#4e342e]">{s.title}</h4>
+                <p className="mt-1 text-xs text-[#8d6e63] leading-relaxed">{s.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Evolution Timeline Component Integration */}
+          <div className="rounded-3xl border border-[#4e342e]/20 bg-[#efe6d5]/30 overflow-hidden shadow-sm">
+            <div className="p-6 pb-0">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">HISTORICAL JOURNEY</span>
+              <h3 className="text-xl font-extrabold text-[#4e342e]">Evolution: Traditional Mining Drills to Ad Marsal Spatial AR</h3>
+              <p className="text-xs text-[#8d6e63] mt-1">
+                Scroll sideways along the interactive timeline to trace how mining safety moved from static paper manuals to real-time spatial augmented reality.
               </p>
             </div>
+            <Timeline
+              title="Drill Evolution Storyline"
+              periodLabel="1990 — 2026 Shift"
+              textColor="#4e342e"
+              mutedTextColor="#8d6e63"
+              activeColor="#cc5500"
+              backgroundColor="#f8f4e7"
+              imageUrl="/mine-background.jpg"
+              imageAlt="Mine safety drill evolution"
+            />
+          </div>
 
-            {/* Contribution Skyline Component Integration */}
-            <div className="w-full">
-              <ContributionSkyline palette="chocolate" defaultView="3d" />
+          {/* Evolution Comparison Table */}
+          <div className="rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/50 p-6">
+            <div className="mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">Direct Benchmark</span>
+              <h3 className="text-lg font-bold text-[#4e342e]">Traditional Mock Drills vs. Ad Marsal Spatial AR</h3>
+              <p className="text-xs text-[#8d6e63]">Why spatial AI preparedness outperforms legacy mining classroom methods</p>
             </div>
 
-            {/* Growth Analytics Summary Cards */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8d6e63]">Safety Incident Reduction</span>
-                <h3 className="mt-2 text-2xl font-extrabold text-[#4e342e]">-74.2%</h3>
-                <p className="mt-1 text-xs text-[#8d6e63]">Compared to traditional classroom mock drills</p>
-              </div>
-              <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8d6e63]">Reaction Speed Time</span>
-                <h3 className="mt-2 text-2xl font-extrabold text-[#cc5500]">3.2 Sec</h3>
-                <p className="mt-1 text-xs text-[#8d6e63]">From hazard cue to correct SCBA / evacuation decision</p>
-              </div>
-              <div className="rounded-2xl border border-[#4e342e]/15 bg-[#efe6d5]/60 p-5">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8d6e63]">Total Certified Workers</span>
-                <h3 className="mt-2 text-2xl font-extrabold text-[#4e342e]">1,420+</h3>
-                <p className="mt-1 text-xs text-[#8d6e63]">Active workers across opencast and underground pits</p>
-              </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#4e342e]/20 text-[#4e342e]">
+                    <th className="py-3 px-4 font-bold">Feature</th>
+                    <th className="py-3 px-4 font-bold text-[#8d6e63]">Traditional Drills</th>
+                    <th className="py-3 px-4 font-bold text-[#cc5500]">Ad Marsal AR Drills</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#4e342e]/10 text-[#4e342e]">
+                  <tr>
+                    <td className="py-3 px-4 font-bold">Hazard Realism</td>
+                    <td className="py-3 px-4 text-[#8d6e63]">Paper charts & static lecture videos</td>
+                    <td className="py-3 px-4 font-semibold text-[#cc5500]">3D spatial mesh with interactive physics</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-bold">Worker Safety</td>
+                    <td className="py-3 px-4 text-[#8d6e63]">Risk of injury during live pit mock demonstrations</td>
+                    <td className="py-3 px-4 font-semibold text-[#cc5500]">100% zero-risk simulated environment</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-bold">Feedback Speed</td>
+                    <td className="py-3 px-4 text-[#8d6e63]">Manual review after weeks</td>
+                    <td className="py-3 px-4 font-semibold text-[#cc5500]">Instant edge-AI scoring & biometric log</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-bold">Multi-Language Support</td>
+                    <td className="py-3 px-4 text-[#8d6e63]">Only standard English or Hindi text</td>
+                    <td className="py-3 px-4 font-semibold text-[#cc5500]">Native voice & UI in Hindi, English & Santhali</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        )}
-
-        {/* TAB 4: HELP & EVOLUTION */}
-        {activeTab === "help" && (
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-xl font-bold text-[#4e342e]">How to Use Ad Marsal System</h2>
-              <p className="text-xs text-[#8d6e63]">Simple step-by-step guide for trainees and frontline supervisors</p>
-            </div>
-
-            {/* Numbered Steps */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { step: "01", title: "Select Scenario", text: "Choose your target scenario from Highwall, Haul Truck, Gas Drill, or PPE audit." },
-                { step: "02", title: "Camera Calibration", text: "Point your smartphone or AR visor camera toward your training floor or workbench." },
-                { step: "03", title: "Identify & React", text: "Detect simulated cracks, gas clouds, or vehicles and tap the correct safety procedure." },
-                { step: "04", title: "Claim Certificate", text: "Receive real-time grading, benchmark feedback, and instant printable safety certification." },
-              ].map((s) => (
-                <div key={s.step} className="rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/60 p-5 relative overflow-hidden">
-                  <span className="text-3xl font-black text-[#4e342e]/15 absolute top-2 right-3 select-none">{s.step}</span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4e342e] text-[#f8f4e7] text-xs font-bold mb-3">
-                    {s.step}
-                  </div>
-                  <h4 className="text-sm font-bold text-[#4e342e]">{s.title}</h4>
-                  <p className="mt-1 text-xs text-[#8d6e63] leading-relaxed">{s.text}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Evolution Comparison Section */}
-            <div className="rounded-2xl border border-[#4e342e]/20 bg-[#efe6d5]/40 p-6">
-              <div className="mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#cc5500]">System Evolution</span>
-                <h3 className="text-lg font-bold text-[#4e342e]">Traditional Mock Drills vs. Ad Marsal Spatial AR</h3>
-                <p className="text-xs text-[#8d6e63]">Why spatial AI preparedness outperforms legacy mining classroom methods</p>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-[#4e342e]/20 text-[#4e342e]">
-                      <th className="py-3 px-4 font-bold">Feature</th>
-                      <th className="py-3 px-4 font-bold text-[#8d6e63]">Traditional Drills</th>
-                      <th className="py-3 px-4 font-bold text-[#cc5500]">Ad Marsal AR Drills</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#4e342e]/10 text-[#4e342e]">
-                    <tr>
-                      <td className="py-3 px-4 font-bold">Hazard Realism</td>
-                      <td className="py-3 px-4 text-[#8d6e63]">Paper charts & static lecture videos</td>
-                      <td className="py-3 px-4 font-semibold text-[#cc5500]">3D spatial mesh with interactive physics</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold">Worker Safety</td>
-                      <td className="py-3 px-4 text-[#8d6e63]">Risk of injury during live pit mock demonstrations</td>
-                      <td className="py-3 px-4 font-semibold text-[#cc5500]">100% zero-risk simulated environment</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold">Feedback Speed</td>
-                      <td className="py-3 px-4 text-[#8d6e63]">Manual review after weeks</td>
-                      <td className="py-3 px-4 font-semibold text-[#cc5500]">Instant edge-AI scoring & biometric log</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-bold">Multi-Language Support</td>
-                      <td className="py-3 px-4 text-[#8d6e63]">Only standard English or Hindi text</td>
-                      <td className="py-3 px-4 font-semibold text-[#cc5500]">Native voice & UI in Hindi, English & Santhali</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
+        </section>
       </main>
 
       {/* ── AR Step-by-Step Guidance Modal (Matching Reference Image) ── */}
